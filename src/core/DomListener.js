@@ -20,7 +20,6 @@ export class DomListener {
         this[methood] = this[methood].bind(this)
        // это тоже самое,что и addEventListener
        this.$root.on(listerner, this[methood])
-       //this.$root.on(listerner, this[methood].bind(this))
      })
     }
 

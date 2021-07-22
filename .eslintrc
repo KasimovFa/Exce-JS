@@ -22,7 +22,9 @@
       "padded-blocks":"off",
       "operator-linebreak":"off",
       "prefer-const":"off",
-      "new-cap":"off"
+      "new-cap":"off",
+      "one-var":"off",
+      "guard-for-in":"off"
     },
     "extends": ["eslint:recommended", "google"]
 }
