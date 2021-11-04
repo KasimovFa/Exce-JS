@@ -17,7 +17,14 @@
       "key-spacing":"off",
       "no-unused-vars":"off",
       "object-curly-spacing":"off",
-      "eol-last":"off"
+      "eol-last":"off",
+      "require-jsdoc":"off",
+      "padded-blocks":"off",
+      "operator-linebreak":"off",
+      "prefer-const":"off",
+      "new-cap":"off",
+      "one-var":"off",
+      "guard-for-in":"off"
     },
     "extends": ["eslint:recommended", "google"]
 }
