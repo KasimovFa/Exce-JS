@@ -43,7 +43,6 @@
     border-left: 0;
     height: 100%;
     position: relative;
-
   }
 
   .cell {
@@ -62,6 +61,7 @@
     &.selected {
       border: none;
       outline: 2px solid $primary-color;
+      outline: 2px solid #3c74ff;
       z-index: 2;
     }
   }

@@ -9,3 +9,5 @@ const excel = new Excel('#app', {
     components:[Header, Toolbar, Formula, Table]
 })
 excel.render()
+import './scss/index.scss';
+console.log('Working');
