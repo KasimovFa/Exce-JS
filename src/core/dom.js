@@ -1,70 +1,119 @@
 class Dom {
-    constructor(selector) {
-      this.$el = typeof selector == 'string'
+  constructor(selector) {
+    this.$el = typeof selector === 'string'
       ? document.querySelector(selector)
-      :selector;
+      : selector
+  }
+
+  html(html) {
+    if (typeof html === 'string') {
+      this.$el.innerHTML = html
+      return this
+    }
+    return this.$el.outerHTML.trim()
+  }
+
+  text(text) {
+    if (typeof text === 'string') {
+      this.$el.textContent = text
+      return this
+    }
+    if (this.$el.tagName.toLowerCase() === 'input') {
+      return this.$el.value.trim()
+    }
+    return this.$el.textContent.trim()
+  }
+
+  clear() {
+    this.html('')
+    return this
+  }
+
+  on(eventType, callback) {
+    this.$el.addEventListener(eventType, callback)
+  }
+
+  off(eventType, callback) {
+    this.$el.removeEventListener(eventType, callback)
+  }
+
+  find(selector) {
+    return $(this.$el.querySelector(selector))
+  }
+
+  append(node) {
+    if (node instanceof Dom) {
+      node = node.$el
     }
 
-    html(html) {
-       if (typeof html === "string") {
-           this.$el.innerHTML = html;
-           return this;
-       }
-       return this.$el.outerHTML.trim(); //удаляет лишние пробелы в начале и в конце
+    if (Element.prototype.append) {
+      this.$el.append(node)
+    } else {
+      this.$el.appendChild(node)
     }
 
-    clear() {
-        this.html();
-        return this
-    }
+    return this
+  }
 
-    on(eventType, callback) {
-        this.$el.addEventListener(eventType, callback);
-    }
+  get data() {
+    return this.$el.dataset
+  }
 
-    off(eventType, callback) {
-        this.$el.removeEventListener(eventType, callback);
-    }
+  closest(selector) {
+    return $(this.$el.closest(selector))
+  }
 
-    append(node) {
-      if (node instanceof Dom) {
-          node = node.$el;
+  getCoords() {
+    return this.$el.getBoundingClientRect()
+  }
+
+  findAll(selector) {
+    return this.$el.querySelectorAll(selector)
+  }
+
+  css(styles = {}) {
+    Object
+        .keys(styles)
+        .forEach(key => {
+          this.$el.style[key] = styles[key]
+        })
+  }
+
+  id(parse) {
+    if (parse) {
+      const parsed = this.id().split(':')
+      return {
+        row: +parsed[0],
+        col: +parsed[1]
       }
-     if (Element.prototype.append) { //если такой метод присутствует в базавом классе Element
-        this.$el.append(node);
-     } else {
-         this.$el.appenChild(node);
-     }
-     return this;
-   }
+    }
+    return this.data.id
+  }
 
-   findAll(selector) {
-       return this.$el.querySelectorAll(selector)
-   }
+  addClass(className) {
+    this.$el.classList.add(className);
+    return this
+  }
 
-   css(styles = {}) {
-      Object.keys(styles).forEach(key => this.$el.style[key] = styles[key])
-   }
+  focus() {
+    this.$el.focus();
+    return this;
+  }
 
-   closest(selector) {
-       return $(this.$el.closest(selector))
-   }
-
-   getCoords() {
-       return this.$el.getBoundingClientRect();
-   }
+  removeClass(className) {
+    this.$el.classList.remove(className);
+    return this
+  }
 }
 
-//создаем экземпляр на основе класса Dom
 export function $(selector) {
-    return new Dom(selector)
+  return new Dom(selector)
 }
 
-//формируем блоки div c компонентами. Пример:tagname = div, classes = Formula. На выходе:div.excel__formula...
-$.create = (tagName, classes) => {
-   const el = document.createElement(tagName);
-   if (classes) {
-       el.classList.add(classes);
-   }
-   return $(el)
+$.create = (tagName, classes = '') => {
+  const el = document.createElement(tagName)
+  if (classes) {
+    el.classList.add(classes)
+  }
+  return $(el)
 }

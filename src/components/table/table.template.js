@@ -1,63 +1,75 @@
 const CODES = {
-    A:65,
-    Z:90
+  A: 65,
+  Z: 90
 }
 
-function createCell(c) {
+// function toCell(row, col) {
+//   return `
+//     <div class="cell" contenteditable data-col="${col}"></div>
+//   `
+// }
+
+function toCell(row) {
+  return function(_, col) {
     return `
-     <div class="cell" contenteditable="" data-col="${c}"></div>
+      <div 
+        class="cell" 
+        contenteditable 
+        data-col="${col}"
+        data-type="cell"
+        data-id="${row}:${col}"
+      ></div>
     `
-
+  }
 }
 
-
-function createCol(el) {
-    return `
-    <div class="column" data-type="resizable" data-col = ${el}>
-    ${el}
-    <div class="col-resize"  data-resize="col"></div>
+function toColumn(col, index) {
+  return `
+    <div class="column" data-type="resizable" data-col="${index}">
+      ${col}
+      <div class="col-resize" data-resize="col"></div>
     </div>
-    `
+  `
 }
 
-function createRow(content, index) {
-   const resizer = index ? '<div class="row-resize" data-resize="row"></div>' : '';
-   return `
-   <div class="row" data-type="resizable">
-   <div class="row-info">
-   ${index ? index : ''}
-   ${resizer}
+function createRow(index, content) {
+  const resize = index ? '<div class="row-resize" data-resize="row"></div>' : ''
+  return `
+    <div class="row" data-type="resizable">
+      <div class="row-info">
+        ${index ? index : ''}
+        ${resize}
+      </div>
+      <div class="row-data">${content}</div>
     </div>
-   <div class="row-data">${content}</div>
-   </div>
-   `
+  `
 }
 
-export function createTable(rowsCount = 20) {
-    const colsCount = CODES.Z - CODES.A + 1;
-    const rows = [];
+function toChar(_, index) {
+  return String.fromCharCode(CODES.A + index)
+}
 
-    const cols = new Array(colsCount)
-    .fill('')
-    .map((el, index) => {
-        return String.fromCharCode(CODES.A + index);
-    })
-    .map(el => {
-        return createCol(el);
-    })
-    .join('');
-    rows.push(createRow(cols, ''));
+export function createTable(rowsCount = 15) {
+  const colsCount = CODES.Z - CODES.A + 1 // Compute cols count
+  const rows = []
 
-    let code = CODES.A;
+  const cols = new Array(colsCount)
+      .fill('')
+      .map(toChar)
+      .map(toColumn)
+      .join('')
 
-    for (let i = 1; i <= rowsCount; i++) {
-       const colsc = new Array(colsCount)
-       .fill('')
-       .map((_el, j) => {
-         return createCell(String.fromCharCode(CODES.A+j))
-       })
-       .join('');
-       rows.push(createRow(colsc, i));
-    }
-     return rows.join('');
- }
+  rows.push(createRow(null, cols))
+
+  for (let row = 0; row < rowsCount; row++) {
+    const cells = new Array(colsCount)
+        .fill('')
+        // .map((_, col) => toCell(row, col))
+        .map(toCell(row))
+        .join('')
+
+    rows.push(createRow(row + 1, cells))
+  }
+
+  return rows.join('')
+}
