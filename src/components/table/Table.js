@@ -33,6 +33,7 @@ export class Table extends ExcelComponent {
   init() {
     super.init();
     const $cell = this.$root.find('[data-id="0:0"]');
+    this.selection.select($cell);
     this.selectCell($cell)
     this.$on('formula:input', value => {
       this.selection.current.attr('data-value', value);
@@ -54,7 +55,6 @@ export class Table extends ExcelComponent {
   }
 
   selectCell($cell) {
-    this.selection.select($cell);
     this.$emit('table:select', $cell);
     const styles = $cell.getStyles(Object.keys(defaultStyles), defaultStyles);
     this.$dispatch(actions.changeStyles(styles));
@@ -76,7 +76,7 @@ export class Table extends ExcelComponent {
       const $target = $(event.target)
       if (event.shiftKey) {
         const $cells = matrix($target, this.selection.current)
-            .map(id => this.$root.find(`[data-id="${id}"]`))
+            .map(id => this.$root.find(`[data-id="${id}"]`));
         this.selection.selectGroup($cells);
       } else {
         this.selection.select($target)
