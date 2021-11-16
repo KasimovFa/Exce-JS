@@ -8,7 +8,7 @@ export class TableSelection {
 
   // $el instanceof DOM === true
   select($el) {
-    this.clear()
+    this.clear();
     $el.focus().addClass(TableSelection.className);
     this.group.push($el)
     this.current = $el
@@ -24,9 +24,9 @@ export class TableSelection {
   }
 
   selectGroup($group = []) {
-    this.clear()
-    this.group = $group
-    this.group.forEach($el => $el.addClass(TableSelection.className))
+    this.clear();
+    this.group = $group;
+    this.group.forEach($el => $el.addClass(TableSelection.className));
   }
 
   applyStyle(style) {
